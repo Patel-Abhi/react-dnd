@@ -5,56 +5,49 @@ import constants from './constants';
 const ShoppingCartSpec = {
   drop() {
     return {
-      name: 'ShoppingCart',
+      name: 'ShoppingCart',   
     };
   }
 };
 
 let collect = (connect, monitor) => {
-  console.log(monitor.getItem());
   return {
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
-    abc:monitor.getItem(),
-    canDrop: monitor.canDrop()
+    canDrop: monitor.canDrop(),
+    dropItem: monitor.getItem()
   };
 }
 
 var ShoppingCart = React.createClass({
   getInitialState() {
     return this.state = {
-      data: ''
+      data: []
     }
   },
   propTypes: {
     connectDropTarget: PropTypes.func.isRequired,
     isOver: PropTypes.bool.isRequired,
     canDrop: PropTypes.bool.isRequired,
-    abc:PropTypes.object
+    dropItem: PropTypes.object
   },
- defaultProps: {
-   abc: {}
- },
   render() {
-    const { canDrop, isOver, connectDropTarget } = this.props;
+    const { canDrop, isOver, connectDropTarget, dropItem} = this.props;
     const isActive = canDrop && isOver;
-
     let backgroundColor = '#FFFFFF';
     backgroundColor = isActive ? '#F7F7BD' : '#F7F7F7';
-
+console.log(dropItem);
     const style = {
       backgroundColor: backgroundColor
     };
 
     return connectDropTarget(
       <div className='shopping-cart' style={ style }>
-
         { isActive ? 'Hummm, snack!' : 'Drag here to order!' }
-        {console.log('-------------'+this.props.abc)}
+
       </div>
     );
   }
 });
-
 
 export default DropTarget(constants.SNACK, ShoppingCartSpec, collect)(ShoppingCart);

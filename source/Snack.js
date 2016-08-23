@@ -5,7 +5,8 @@ var name = [];
 const snackSpec = {
   beginDrag(props) {
     return {
-      name: props.name
+      name: props.name,
+      schema: props.schema
     };
   },
   endDrag(props, monitor) {
@@ -15,8 +16,7 @@ const snackSpec = {
     if (dropResult) {
       console.log(`You dropped ${dragItem.name} into ${dropResult.name}`);
       name.push(dragItem.name);
-      console.log(name);
-
+      //console.log(dragItem);
     }
   },
 
