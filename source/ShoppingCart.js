@@ -41,22 +41,18 @@ var ShoppingCart = React.createClass({
     var control;
     switch (schema.type) {
       case 'input':
-        control = <ControlWrappers><TextBox propVal = {schema}/></ControlWrappers>;
+        control = <Wrapper><TextBox propVal = {schema}/></Wrapper>;
         break;
       case 'multiCheckbox':
       case 'checkbox':
-        control = <CheckBox propVal = {schema}/>;
+        control = <Wrapper><CheckBox propVal = {schema}/></Wrapper>;
         break;
       case 'select':
-        control = <DropDown propVal = {schema}/>;
+        control = <Wrapper><DropDown propVal = {schema}/></Wrapper>;
         break;
     }
     return control;
   },
-  renderControl() {
-
-  },
-
   render() {
 
     const { canDrop, isOver, connectDropTarget, dropItems} = this.props;
@@ -66,11 +62,13 @@ var ShoppingCart = React.createClass({
     const style = {
       backgroundColor: backgroundColor
     };
+    var placeholder = document.createElement("li");
+    placeholder.className = "placeholder";
     var listStyle = { 'listStyleType': 'none' };
     var ctrlState = this.state.controls;
     return connectDropTarget(
       <div className='shopping-cart' style={ style }>
-        <ul  style={listStyle}>
+        <ul  style={listStyle} onDragOver={this.dragOver}>
           {
             this.state.controls.map((item, i) =>
               (<li key={i}>
@@ -84,16 +82,19 @@ var ShoppingCart = React.createClass({
   }
 });
 
-var ControlWrappers = React.createClass({
+var Wrapper = React.createClass({
+  handleClose(e) {
+    console.log(e);
+  },
   render() {
-    var prop = this.props.propVal;
+    var prop = this.props.children;
+    console.log(this.props.children);
     return (
       <div className="drag-box">
-        fdfsfsdfsdfsdfs
-        <div className="close-btn">
+        <div className="close-btn" onClick={this.handleClose}>
           <a href="#"><i className="fa fa-times" aria-hidden="true"></i></a>
         </div>
-        {}
+        {this.props.children}
         <div className="overlap-dragbox" data-toggle="modal" data-target="#textboxModal"></div>
       </div>
     );
@@ -131,8 +132,6 @@ var Radio = React.createClass({
 var CheckBox = React.createClass({
   render() {
     var prop = this.props.propVal;
-    console.log(prop);
-    console.log('Hello ' + prop.templateOptions.options);
     var multiCheck = false;
     if (prop.templateOptions.options !== undefined) {
       multiCheck = true;

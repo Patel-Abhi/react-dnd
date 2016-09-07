@@ -85,7 +85,6 @@ var Container = React.createClass({
   },
 
   dropItem(item) {
-    //console.log('this'+ item);
     var items = this.state.droppedItems;
     items.push(item);
     this.setState({
