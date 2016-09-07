@@ -146,12 +146,24 @@ input[type='text'], input[type='email'], input[type='password'], textarea, selec
     margin-top: 20px; }
   #asset-management-container .btn-primary {
     margin-top: 20px; }
+    .shopping-cart .drag-box{
+      min-height: 40px;
+    }
   .shopping-cart .close-btn {
     float: right;
     width: 20px;
     height: 20px;
     background: #e6e6e6;
     margin-top: -11px;
+    border: 1px solid #ccc;
+    text-align: center;
+    margin-right: -31px; }
+    .shopping-cart .gear-btn {
+    float: right;
+    width: 20px;
+    height: 20px;
+    background: #e6e6e6;
+    margin-top: 10px;
     border: 1px solid #ccc;
     text-align: center;
     margin-right: -31px; }

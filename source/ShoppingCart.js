@@ -6,6 +6,7 @@ const ShoppingCartSpec = {
   drop(connect, monitor, component) {
     var abc = monitor.getItem().schema;
     var controls = component.state.controls;
+    abc.id = new Date().getTime();
     controls.push(abc);
     component.setState({
       controls: controls
@@ -37,22 +38,13 @@ var ShoppingCart = React.createClass({
       controls: []
     }
   },
-  getFormControl(schema) {
-    var control;
-    switch (schema.type) {
-      case 'input':
-        control = <Wrapper><TextBox propVal = {schema}/></Wrapper>;
-        break;
-      case 'multiCheckbox':
-      case 'checkbox':
-        control = <Wrapper><CheckBox propVal = {schema}/></Wrapper>;
-        break;
-      case 'select':
-        control = <Wrapper><DropDown propVal = {schema}/></Wrapper>;
-        break;
-    }
-    return control;
-  },
+  deleteControl(toRemove) {
+    console.log(toRemove);
+     
+     this.setState({
+       controls : this.state.controls.filter(x => x.id !== toRemove.id)
+     });
+  }, 
   render() {
 
     const { canDrop, isOver, connectDropTarget, dropItems} = this.props;
@@ -62,18 +54,16 @@ var ShoppingCart = React.createClass({
     const style = {
       backgroundColor: backgroundColor
     };
-    var placeholder = document.createElement("li");
-    placeholder.className = "placeholder";
     var listStyle = { 'listStyleType': 'none' };
     var ctrlState = this.state.controls;
     return connectDropTarget(
       <div className='shopping-cart' style={ style }>
-        <ul  style={listStyle} onDragOver={this.dragOver}>
+        <ul  style={listStyle}>
           {
             this.state.controls.map((item, i) =>
-              (<li key={i}>
-                {this.getFormControl(item) }
-              </li>)
+              (
+                <Wrapper key={i} schema={item} onDelete={this.deleteControl}/>
+              )
             )
           }
         </ul>
@@ -83,20 +73,39 @@ var ShoppingCart = React.createClass({
 });
 
 var Wrapper = React.createClass({
-  handleClose(e) {
-    console.log(e);
+   getFormControl() {
+    var control;
+    switch (this.props.schema.type) {
+      case 'input':
+        control = <TextBox propVal = {this.props.schema}/>
+        break;
+      case 'multiCheckbox':
+      case 'checkbox':
+        control = <CheckBox propVal = {this.props.schema}/>
+        break;
+      case 'select':
+        control = <DropDown propVal = {this.props.schema}/>
+        break;
+    }
+    return control;
+  },
+  onDelete (){
+    this.props.onDelete(this.props.schema);
   },
   render() {
-    var prop = this.props.children;
-    console.log(this.props.children);
     return (
-      <div className="drag-box">
-        <div className="close-btn" onClick={this.handleClose}>
-          <a href="#"><i className="fa fa-times" aria-hidden="true"></i></a>
+      <li>
+        <div className="drag-box">
+          <div className="close-btn">
+            <a href="#" onClick={this.onDelete}><i className="fa fa-times" aria-hidden="true"></i></a>
+          </div>
+          <div className="gear-btn">
+            <a href="#"><i className="fa fa-gear"></i></a>
+          </div>
+          {this. getFormControl()}
+          <div className="overlap-dragbox" data-toggle="modal" data-target="#textboxModal"></div>
         </div>
-        {this.props.children}
-        <div className="overlap-dragbox" data-toggle="modal" data-target="#textboxModal"></div>
-      </div>
+      </li>
     );
   }
 });
