@@ -3,6 +3,8 @@ import { DropTarget } from 'react-dnd';
 import constants from './constants';
 import {Modal, Button} from 'react-bootstrap';
 
+
+// Spec object definiction for Shoping cart
 const ShoppingCartSpec = {
   drop(connect, monitor, component) {
     var draggedControl = Object.assign({ id: new Date().getTime() }, monitor.getItem().schema);
@@ -16,11 +18,7 @@ const ShoppingCartSpec = {
   }
 };
 
-
-var placeholder = document.createElement("li");
-placeholder.className = "placeholder";
-
-
+//  Shopping cart collection function
 let collect = (connect, monitor) => {
   return {
     connectDropTarget: connect.dropTarget(),
@@ -30,6 +28,7 @@ let collect = (connect, monitor) => {
   };
 }
 
+// Shopping cart component
 var ShoppingCart = React.createClass({
   propTypes: {
     connectDropTarget: PropTypes.func.isRequired,
@@ -47,9 +46,7 @@ var ShoppingCart = React.createClass({
       controls: this.state.controls.filter(x => x.id !== toRemove.id)
     });
   },
-  showFieldConfig(type) {
-    return 'true';
-  },
+
   render() {
     const { canDrop, isOver, connectDropTarget, dropItems} = this.props;
     const isActive = canDrop && isOver;
@@ -66,7 +63,7 @@ var ShoppingCart = React.createClass({
             this.state.controls.map((item, i) =>
               (
                 <li draggable="true" key={i}>
-                  <Wrapper key={i} schema={item} onDelete={this.deleteControl} onEditClick={this.showFieldConfig}/>
+                  <Wrapper key={i} schema={item} onDelete={this.deleteControl} />
                 </li>
               )
             )
@@ -78,9 +75,13 @@ var ShoppingCart = React.createClass({
 });
 
 
-// Wrapper for controls that are being dragged 
-
+// Wrapper for controls that are being dragged
 var Wrapper = React.createClass({
+    getInitialState(){
+        return this.state={
+            modelState :false
+        }
+    },
   getFormControl() {
     var control;
     switch (this.props.schema.type) {
@@ -106,9 +107,11 @@ var Wrapper = React.createClass({
   onDelete() {
     this.props.onDelete(this.props.schema);
   },
-  handleEdit() {
-    this.props.onEditClick(this.props.schema.type);
-    console.log(this.props.schema.type+ "Hello");
+  handleEdit(type) {
+    console.log('edit clicked');
+    this.setState({
+      modelState :true
+    })
   },
   render() {
     return (
@@ -120,7 +123,12 @@ var Wrapper = React.createClass({
           <a href="#"><i className="fa fa-gear" aria-hidden="true"></i></a>
         </div>
         {this.getFormControl() }
-        <ModelContainer displayState={this.showFieldConfig}/>
+        {
+          (this.state.modelState==true) ? 
+          <ModelContainer displayState={this.state.modelState}/>
+          : null
+        }
+        <ModelContainer displayState={this.state.modelState}/>
         <div className="overlap-dragbox" data-toggle="modal" data-target="#textboxModal"></div>
       </div>
     );
@@ -218,15 +226,18 @@ var DropDown = React.createClass({
 
 var ModelContainer = React.createClass({
   getInitialState() {
+    //return { show: this.props.displayState };
     return { show: this.props.displayState };
   },
   hideModal() {
     this.setState({ show: false });
   },
+  changeState(){
+    this.props.onStateChange()
+  },
   render() {
     return (
       <Modal
-        {...this.props}
         show={this.state.show}
         onHide={this.hideModal}
         dialogClassName="custom-modal"
