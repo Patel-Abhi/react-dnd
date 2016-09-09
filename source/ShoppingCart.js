@@ -1,21 +1,25 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 import constants from './constants';
+import {Modal, Button} from 'react-bootstrap';
 
 const ShoppingCartSpec = {
   drop(connect, monitor, component) {
-    var abc = monitor.getItem().schema;
-    var controls = component.state.controls;
-    abc.id = new Date().getTime();
-    controls.push(abc);
+    var draggedControl = Object.assign({ id: new Date().getTime() }, monitor.getItem().schema);
+    component.state.controls.push(draggedControl);
     component.setState({
-      controls: controls
+      controls: component.state.controls
     });
     return {
       name: 'ShoppingCart',
     };
   }
 };
+
+
+var placeholder = document.createElement("li");
+placeholder.className = "placeholder";
+
 
 let collect = (connect, monitor) => {
   return {
@@ -39,14 +43,14 @@ var ShoppingCart = React.createClass({
     }
   },
   deleteControl(toRemove) {
-    console.log(toRemove);
-     
-     this.setState({
-       controls : this.state.controls.filter(x => x.id !== toRemove.id)
-     });
-  }, 
+    this.setState({
+      controls: this.state.controls.filter(x => x.id !== toRemove.id)
+    });
+  },
+  showFieldConfig(type) {
+    return 'true';
+  },
   render() {
-
     const { canDrop, isOver, connectDropTarget, dropItems} = this.props;
     const isActive = canDrop && isOver;
     let backgroundColor = '#FFFFFF';
@@ -55,14 +59,15 @@ var ShoppingCart = React.createClass({
       backgroundColor: backgroundColor
     };
     var listStyle = { 'listStyleType': 'none' };
-    var ctrlState = this.state.controls;
     return connectDropTarget(
       <div className='shopping-cart' style={ style }>
-        <ul  style={listStyle}>
+        <ul style={listStyle}>
           {
             this.state.controls.map((item, i) =>
               (
-                <Wrapper key={i} schema={item} onDelete={this.deleteControl}/>
+                <li draggable="true" key={i}>
+                  <Wrapper key={i} schema={item} onDelete={this.deleteControl} onEditClick={this.showFieldConfig}/>
+                </li>
               )
             )
           }
@@ -72,16 +77,25 @@ var ShoppingCart = React.createClass({
   }
 });
 
+
+// Wrapper for controls that are being dragged 
+
 var Wrapper = React.createClass({
-   getFormControl() {
+  getFormControl() {
     var control;
     switch (this.props.schema.type) {
       case 'input':
         control = <TextBox propVal = {this.props.schema}/>
         break;
+      case "textArea":
+        control = <TextArea propVal = {this.props.schema}/>
+        break;
       case 'multiCheckbox':
       case 'checkbox':
         control = <CheckBox propVal = {this.props.schema}/>
+        break;
+      case "radio":
+        control = <Radio propVal={this.props.schema}/>
         break;
       case 'select':
         control = <DropDown propVal = {this.props.schema}/>
@@ -89,23 +103,26 @@ var Wrapper = React.createClass({
     }
     return control;
   },
-  onDelete (){
+  onDelete() {
     this.props.onDelete(this.props.schema);
+  },
+  handleEdit() {
+    this.props.onEditClick(this.props.schema.type);
+    console.log(this.props.schema.type+ "Hello");
   },
   render() {
     return (
-      <li>
-        <div className="drag-box">
-          <div className="close-btn">
-            <a href="#" onClick={this.onDelete}><i className="fa fa-times" aria-hidden="true"></i></a>
-          </div>
-          <div className="gear-btn">
-            <a href="#"><i className="fa fa-gear"></i></a>
-          </div>
-          {this. getFormControl()}
-          <div className="overlap-dragbox" data-toggle="modal" data-target="#textboxModal"></div>
+      <div className="drag-box">
+        <div className="close-btn" onClick={this.onDelete}>
+          <a href="#"><i className="fa fa-times" aria-hidden="true"></i></a>
         </div>
-      </li>
+        <div className="gear-btn" onClick = {this.handleEdit}>
+          <a href="#"><i className="fa fa-gear" aria-hidden="true"></i></a>
+        </div>
+        {this.getFormControl() }
+        <ModelContainer displayState={this.showFieldConfig}/>
+        <div className="overlap-dragbox" data-toggle="modal" data-target="#textboxModal"></div>
+      </div>
     );
   }
 });
@@ -122,18 +139,32 @@ var TextBox = React.createClass({
   }
 });
 
+var TextArea = React.createClass({
+  render() {
+    var prop = this.props.propVal;
+    return (
+      <div className="form-group">
+        <label htmlFor="comment">{prop.templateOptions.label}</label>
+        <textarea className="form-control" rows="5" id="comment"></textarea>
+      </div>
+    );
+  }
+});
+
 var Radio = React.createClass({
   render() {
     var prop = this.props.propVal;
     return (
-      <div className="radio">
+      <form>
+        <p>{prop.templateOptions.label}</p>
         {
-          prop.templateOptions.options.forEach((item) => {
-            <label><input type="radio" name="optradio" value={item.value}/>{item.name}</label>
-          })
-        }
-
-      </div>
+          prop.templateOptions.options.map((item, i) => (
+            <div className="radio" key={i}>
+              <label><input type="radio" value={item.value}/>{item.name}</label>
+            </div>
+          )
+          ) }
+      </form>
     );
   }
 });
@@ -181,6 +212,35 @@ var DropDown = React.createClass({
           </select>
         }
       </div>
+    );
+  }
+});
+
+var ModelContainer = React.createClass({
+  getInitialState() {
+    return { show: this.props.displayState };
+  },
+  hideModal() {
+    this.setState({ show: false });
+  },
+  render() {
+    return (
+      <Modal
+        {...this.props}
+        show={this.state.show}
+        onHide={this.hideModal}
+        dialogClassName="custom-modal"
+        >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-lg">Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          This is model body
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={this.hideModal}>Close</Button>
+        </Modal.Footer>
+      </Modal>
     );
   }
 });

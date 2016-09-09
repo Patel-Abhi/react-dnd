@@ -6,76 +6,96 @@ import HTML5BackEnd from 'react-dnd-html5-backend';
 
 var textSchema = {
   "type": "input",
-  "key": "company",
+  "key": "textbox1",
   "templateOptions": {
     "type": "text",
     "placeholder": "Textbox",
-    "label": "Company"
+    "label": "Text Box"
   }
 }
 var radioSchema = {
   "type": "radio",
-  "key": "radio",
+  "key": "radio1",
   "templateOptions": {
-    "type": "radio",
-    "placeholder": "",
-    "label": "Company"
+    "label": "Radio",
+    "options": [
+      {
+        "name": "Option 1",
+        "value": "value1"
+      },
+      {
+        "name": "Option 2",
+        "value": "value2"
+      }
+    ],
+    "valueProp": "value",
+    "labelProp": "name"
   }
-}
+};
 var selectSchema = {
-  "key": "ram",
+  "key": "select",
   "type": "select",
   "templateOptions": {
-    "label": "Ram",
+    "label": "select options",
     "valueProp": "name",
     "options": [
       {
-        "name": "1 GB",
-        "value": "1 GB"
+        "name": "Option 1",
+        "value": "value1"
       },
       {
-        "name": "2 GB",
-        "value": "2 GB"
+        "name": "Option 2",
+        "value": "value2"
       },
       {
-        "name": "3 GB",
-        "value": "3 GB"
+        "name": "Option 3",
+        "value": "value3"
       }
     ]
   }
 }
 var multiCheck = {
   "type": "multiCheckbox",
-        "key": "features",
-        "templateOptions": {
-          "label": "Features",
-          "options": [
-            {
-              "name": "Camera",
-              "value": "Camera"
-            },
-            {
-              "name": "WiFi",
-              "value": "WiFi"
-            },
-            {
-              "name": "GPS",
-              "value": "GPS"
-            }
-          ],
-          "valueProp": "value",
-          "labelProp": "name"
-        }
-      };
+  "key": "features",
+  "templateOptions": {
+    "label": "Features",
+    "options": [
+      {
+        "name": "Option 1",
+        "value": "value1"
+      },
+      {
+        "name": "Option 2",
+        "value": "value2"
+      },
+      {
+        "name": "Option 3",
+        "value": "value3"
+      }
+    ],
+    "valueProp": "value",
+    "labelProp": "name"
+  }
+};
 var chackBoxSchema = {
   "type": "checkbox",
-  "key": "radio",
+  "key": "checkbox",
   "templateOptions": {
     "type": "checkbox",
     "placeholder": "",
     "label": "Check Box"
   }
 }
+var textAreaSchema = {
+  "type": "textArea",
+  "key": "textArea",
+  "templateOptions": {
+    "type": "text",
+    "placeholder": "Text Area",
+    "label": "Text Area"
+  }
+}
+
 var Container = React.createClass({
 
   getInitialState() {
@@ -96,11 +116,11 @@ var Container = React.createClass({
     return (
       <div>
         <Snack name='Text' schema={textSchema} />
+        <Snack name='Popcorn' schema={textAreaSchema} />
         <Snack name='Radio'  schema={radioSchema} />
         <Snack name='Drop Down' schema={selectSchema} />
         <Snack name='CheckBox' schema={chackBoxSchema} />
         <Snack name='Multi Check' schema={multiCheck} />
-        {/*<Snack name='Popcorn' schema={textSchema} />*/}
         <ShoppingCart onDropItem={this.dropItem}/>
       </div>
     );
