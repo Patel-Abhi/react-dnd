@@ -122,7 +122,21 @@ var Container = React.createClass({
         <Snack name='Drop Down' schema={selectSchema} />
         <Snack name='CheckBox' schema={chackBoxSchema} />
         <Snack name='Multi Check' schema={multiCheck} />
+        {/*
+        <div className="container">
+          <div className="form-group">
+              <label htmlFor="usr">Name: </label>
+              <input type="text" className="form-control"/>
+            </div>
+        </div>  
+         */}
         <ShoppingCart onDropItem={this.dropItem}/>
+        <div className="pull-right">
+        <button className="btn btn-default">Cancel</button>
+        <button className="btn btn-primary">Save</button>
+        </div>
+        <div>
+        </div>
       </div>
     );
   }

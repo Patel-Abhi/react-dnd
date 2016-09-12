@@ -46,7 +46,6 @@ var ShoppingCart = React.createClass({
       controls: this.state.controls.filter(x => x.id !== toRemove.id)
     });
   },
-
   render() {
     const { canDrop, isOver, connectDropTarget, dropItems} = this.props;
     const isActive = canDrop && isOver;
@@ -59,14 +58,6 @@ var ShoppingCart = React.createClass({
     return connectDropTarget(
       <div className='shopping-cart' style={ style }>
         <ul style={listStyle}>
-          {/*
-          <li>
-            <div className="form-group">
-              <label htmlFor="usr">Name: </label>
-              <input type="text" className="form-control"/>
-            </div>
-          </li>  
-           */}
           {
             this.state.controls.map((item, i) =>
               (
@@ -234,13 +225,14 @@ var DropDown = React.createClass({
   }
 });
 
+// Model container for controls that are being dragged
 var ModelContainer = React.createClass({
   getControlModel() {
     var model;
     switch (this.props.schema.type) {
       case 'input':
       case "textArea":
-        model = <TextBoxEdit schema = {this.props.schema}/>
+        model = <TextBoxEdit schema = {this.props.schema} callbackParent={this.getChildState} />
         break;
       case 'checkbox':
         model = <CheckboxEdit schema = {this.props.schema}/>
@@ -262,6 +254,9 @@ var ModelContainer = React.createClass({
     this.setState({ show: false });
     this.props.changeState(this.props.displayState);
   },
+  getChildState(state) {
+    console.log(state.data);
+  },
   render() {
     return (
       <Modal
@@ -273,7 +268,7 @@ var ModelContainer = React.createClass({
           <Modal.Title id="contained-modal-title-lg">Edit {this.props.schema.type}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {this.getControlModel()}
+          {this.getControlModel() }
         </Modal.Body>
         <Modal.Footer>
           <div className="modal-footer">
@@ -288,42 +283,55 @@ var ModelContainer = React.createClass({
 
 var TextBoxEdit = React.createClass({
   getInitialState() {
-    return this.props.schema;
+    var prop = this.props.schema;
+    return {
+      data:{
+      'id': '',
+      'label': prop.templateOptions.label,
+      'placeholder': prop.templateOptions.placeholder,
+      'isRequired': prop.templateOptions.isRequired
+    }
+    }
   },
-  handleChange(e){
-      console.log(e.target);
-      var state = this.state;
-      state.templateOptions.placeholder += e.target.value;
-      console.log(this.state);
-      //this.setState({ templateOptions:{ placeholder:e.target.value} })
+  handleChange(e) {
+    console.log(e.target.checked);
+    if(e.target.name==='isRequired')
+    {
+      this.state.data[e.target.name] = e.target.checked
+    }
+    else{
+      this.state.data[e.target.name] = e.target.value
+    }    
+    this.setState({
+      state:this.state
+    })
+    this.props.callbackParent(this.state);
   },
   render() {
-    console.log(this.state);
-
     return (
       <form className="form-horizontal col-sm-12">
         <div className="form-group">
           <label className="control-label col-sm-3" htmlFor="email">Id: </label>
           <div className="col-sm-9">
-            <input type="email" className="form-control"/>
+            <input type="text" className="form-control" name="id" value={this.state.data.id} onChange={this.handleChange}/>
           </div>
         </div>
         <div className="form-group">
           <label className="control-label col-sm-3" htmlFor="pwd">Label Text: </label>
           <div className="col-sm-9">
-            <input type="text" className="form-control" placeholder={this.state.templateOptions.label} onChange={this.handleChange}/>
+            <input type="text" className="form-control" name="label" value={this.state.data.label} onChange={this.handleChange} />
           </div>
         </div>
         <div className="form-group">
           <label className="control-label col-sm-3" htmlFor="pwd">Placeholder: </label>
           <div className="col-sm-9">
-            <input type="text" className="form-control" value={this.state.templateOptions.placeholder} onChange={this.handleChange}/>
+            <input type="text" className="form-control" name="placeholder" value={this.state.data.placeholder} onChange={this.handleChange}/>
           </div>
         </div>
         <div className="form-group">
           <label className="control-label col-sm-3" htmlFor="pwd" style={{ paddingTop: 0 }}>Required</label>
           <div className="col-sm-9">
-            <input type="checkbox" onChange={this.handleChange}/>
+            <input type="checkbox" name="isRequired" value={this.state.data.isRequired} onChange={this.handleChange}/>
           </div>
         </div>
       </form>
