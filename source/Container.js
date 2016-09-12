@@ -10,7 +10,8 @@ var textSchema = {
   "templateOptions": {
     "type": "text",
     "placeholder": "Textbox",
-    "label": "Text Box"
+    "label": "Text Box",
+    "isRequired": false
   }
 }
 var radioSchema = {

@@ -59,6 +59,14 @@ var ShoppingCart = React.createClass({
     return connectDropTarget(
       <div className='shopping-cart' style={ style }>
         <ul style={listStyle}>
+          {/*
+          <li>
+            <div className="form-group">
+              <label htmlFor="usr">Name: </label>
+              <input type="text" className="form-control"/>
+            </div>
+          </li>  
+           */}
           {
             this.state.controls.map((item, i) =>
               (
@@ -77,13 +85,14 @@ var ShoppingCart = React.createClass({
 
 // Wrapper for controls that are being dragged
 var Wrapper = React.createClass({
-    getInitialState(){
-        return this.state={
-            modelState :false
-        }
-    },
+  getInitialState() {
+    return this.state = {
+      modelState: false
+    }
+  },
   getFormControl() {
     var control;
+
     switch (this.props.schema.type) {
       case 'input':
         control = <TextBox propVal = {this.props.schema}/>
@@ -107,11 +116,13 @@ var Wrapper = React.createClass({
   onDelete() {
     this.props.onDelete(this.props.schema);
   },
-  handleEdit(type) {
-    console.log('edit clicked');
+  handleEdit() {
     this.setState({
-      modelState :true
+      modelState: true
     })
+  },
+  changeModelState() {
+    this.setState({ modelState: false })
   },
   render() {
     return (
@@ -124,11 +135,10 @@ var Wrapper = React.createClass({
         </div>
         {this.getFormControl() }
         {
-          (this.state.modelState==true) ? 
-          <ModelContainer displayState={this.state.modelState}/>
-          : null
+          (this.state.modelState === true) ?
+            <ModelContainer displayState={this.state.modelState} changeState={this.changeModelState} schema={this.props.schema}/>
+            : null
         }
-        <ModelContainer displayState={this.state.modelState}/>
         <div className="overlap-dragbox" data-toggle="modal" data-target="#textboxModal"></div>
       </div>
     );
@@ -225,15 +235,32 @@ var DropDown = React.createClass({
 });
 
 var ModelContainer = React.createClass({
+  getControlModel() {
+    var model;
+    switch (this.props.schema.type) {
+      case 'input':
+      case "textArea":
+        model = <TextBoxEdit schema = {this.props.schema}/>
+        break;
+      case 'checkbox':
+        model = <CheckboxEdit schema = {this.props.schema}/>
+        break;
+      case 'multiCheckbox':
+      case "radio":
+      case 'select':
+        model = <RadioEdit schema = {this.props.schema}/>
+        break;
+    }
+    return model;
+  },
+
   getInitialState() {
-    //return { show: this.props.displayState };
+    console.log(this.props.schema.type);
     return { show: this.props.displayState };
   },
   hideModal() {
     this.setState({ show: false });
-  },
-  changeState(){
-    this.props.onStateChange()
+    this.props.changeState(this.props.displayState);
   },
   render() {
     return (
@@ -243,17 +270,122 @@ var ModelContainer = React.createClass({
         dialogClassName="custom-modal"
         >
         <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-lg">Modal heading</Modal.Title>
+          <Modal.Title id="contained-modal-title-lg">Edit {this.props.schema.type}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          This is model body
+          {this.getControlModel()}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.hideModal}>Close</Button>
+          <div className="modal-footer">
+            <button type="submit" className="col-sm-3 btn btn-primary">Save</button>
+          </div>
         </Modal.Footer>
       </Modal>
     );
   }
 });
+
+
+var TextBoxEdit = React.createClass({
+  getInitialState() {
+    return this.props.schema;
+  },
+  handleChange(e){
+      console.log(e.target);
+      var state = this.state;
+      state.templateOptions.placeholder += e.target.value;
+      console.log(this.state);
+      //this.setState({ templateOptions:{ placeholder:e.target.value} })
+  },
+  render() {
+    console.log(this.state);
+
+    return (
+      <form className="form-horizontal col-sm-12">
+        <div className="form-group">
+          <label className="control-label col-sm-3" htmlFor="email">Id: </label>
+          <div className="col-sm-9">
+            <input type="email" className="form-control"/>
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="control-label col-sm-3" htmlFor="pwd">Label Text: </label>
+          <div className="col-sm-9">
+            <input type="text" className="form-control" placeholder={this.state.templateOptions.label} onChange={this.handleChange}/>
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="control-label col-sm-3" htmlFor="pwd">Placeholder: </label>
+          <div className="col-sm-9">
+            <input type="text" className="form-control" value={this.state.templateOptions.placeholder} onChange={this.handleChange}/>
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="control-label col-sm-3" htmlFor="pwd" style={{ paddingTop: 0 }}>Required</label>
+          <div className="col-sm-9">
+            <input type="checkbox" onChange={this.handleChange}/>
+          </div>
+        </div>
+      </form>
+    );
+  }
+});
+
+var CheckboxEdit = React.createClass({
+  getInitialState() {
+    return { schema: this.props.schema }
+  },
+  render() {
+    return (
+      <form className="form-horizontal col-sm-12">
+        <div className="form-group">
+          <label className="control-label col-sm-3" htmlFor="email">Id: </label>
+          <div className="col-sm-9">
+            <input type="email" className="form-control"/>
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="control-label col-sm-3" htmlFor="pwd">Label Text: </label>
+          <div className="col-sm-9">
+            <input type="text" className="form-control" />
+          </div>
+        </div>
+      </form>
+    );
+  }
+});
+
+
+var RadioEdit = React.createClass({
+  getInitialState() {
+    return { schema: this.props.schema }
+  },
+  render() {
+    return (
+      <form className="form-horizontal col-sm-12">
+        <div className="form-group">
+          <label className="control-label col-sm-3" htmlFor="email">Id: </label>
+          <div className="col-sm-9">
+            <input type="email" className="form-control"/>
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="control-label col-sm-3" htmlFor="pwd">Label Text: </label>
+          <div className="col-sm-9">
+            <input type="text" className="form-control" />
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="control-label col-sm-3" htmlFor="pwd">Options: </label>
+          <div className="col-sm-9">
+            <textarea className="form-control" />
+          </div>
+        </div>
+      </form>
+    );
+  }
+});
+
+
 
 export default DropTarget(constants.SNACK, ShoppingCartSpec, collect)(ShoppingCart);
