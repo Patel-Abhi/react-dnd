@@ -10,22 +10,21 @@ var ModelContainer = React.createClass({
         switch (this.props.schema.type) {
             case 'input':
             case "textArea":
-                model = <TextBoxEdit schema = {this.props.schema} callbackParent={this.getChildState} />
+                model = <TextBoxEdit schema = {this.props.schema} callbackParent={this.getChildProp} />
                 break;
             case 'checkbox':
-                model = <CheckboxEdit schema = {this.props.schema} callbackParent={this.getChildState}/>
+                model = <CheckboxEdit schema = {this.props.schema} callbackParent={this.getChildProp}/>
                 break;
             case 'multiCheckbox':
             case "radio":
             case 'select':
-                model = <RadioEdit schema = {this.props.schema} callbackParent={this.getChildState}/>
+                model = <RadioEdit schema = {this.props.schema} callbackParent={this.getChildProp}/>
                 break;
         }
         return model;
     },
 
     getInitialState() {
-        console.log(this.props.schema.type);
         return { show: this.props.displayState };
     },
     hideModal() {
@@ -33,12 +32,9 @@ var ModelContainer = React.createClass({
         this.props.changeState(this.props.displayState);
         this.props.onSchemaEdit(this.props.schema);
     },
-    getChildState(state) {
+    getChildProp(state) {
         return state;
         //this.props.onSchemaEdit(state)
-    },
-    handleClick() {
-        this.props.onSchemaEdit(getChildState());
     },
     render() {
         return (
@@ -54,9 +50,6 @@ var ModelContainer = React.createClass({
                     {this.getControlModel() }
                 </Modal.Body>
                 <Modal.Footer>
-                    <div className="modal-footer">
-                        <button type="submit" className="col-sm-3 btn btn-primary" onClick={this.handleClick}>Save</button>
-                    </div>
                 </Modal.Footer>
             </Modal>
         );

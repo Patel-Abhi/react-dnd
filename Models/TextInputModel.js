@@ -23,6 +23,9 @@ var TextBoxEdit = React.createClass({
         this.setState({
             state: this.state
         })
+    },
+    handleSubmit(e) {
+        e.preventDefault();
         var prop = this.props.schema;
 
         prop = {
@@ -33,11 +36,12 @@ var TextBoxEdit = React.createClass({
                 placeholder: this.state.data.placeholder
             }
         };
-        this.props.callbackParent(prop);
+        console.log(prop);
+        //this.props.callbackParent(prop);
     },
     render() {
         return (
-            <form className="form-horizontal col-sm-12">
+            <form className="form-horizontal col-sm-12" onSubmit={this.handleSubmit}>
                 <div className="form-group">
                     <label className="control-label col-sm-3" htmlFor="email">Id: </label>
                     <div className="col-sm-9">
@@ -62,6 +66,7 @@ var TextBoxEdit = React.createClass({
                         <input type="checkbox" name="isRequired" value={this.state.data.isRequired} onChange={this.handleChange}/>
                     </div>
                 </div>
+                <button type="submit" className="col-sm-3 btn btn-primary">Save</button>
             </form>
         );
     }
