@@ -78,7 +78,8 @@ var ShoppingCart = React.createClass({
 var Wrapper = React.createClass({
   getInitialState() {
     return this.state = {
-      modelState: false
+      modelState: false,
+      schema: this.props.schema
     }
   },
   getFormControl() {
@@ -86,20 +87,20 @@ var Wrapper = React.createClass({
 
     switch (this.props.schema.type) {
       case 'input':
-        control = <TextBox propVal = {this.props.schema}/>
+        control = <TextBox propVal = {this.state.schema}/>
         break;
       case "textArea":
-        control = <TextArea propVal = {this.props.schema}/>
+        control = <TextArea propVal = {this.state.schema}/>
         break;
       case 'multiCheckbox':
       case 'checkbox':
-        control = <CheckBox propVal = {this.props.schema}/>
+        control = <CheckBox propVal = {this.state.schema}/>
         break;
       case "radio":
-        control = <Radio propVal={this.props.schema}/>
+        control = <Radio propVal={this.state.schema}/>
         break;
       case 'select':
-        control = <DropDown propVal = {this.props.schema}/>
+        control = <DropDown propVal = {this.state.schema}/>
         break;
     }
     return control;
@@ -115,6 +116,12 @@ var Wrapper = React.createClass({
   changeModelState() {
     this.setState({ modelState: false })
   },
+  changeSchema(newSchema) {
+    //console.log(newSchema);
+    this.setState({
+      schema: newSchema
+    })
+  },
   render() {
     return (
       <div className="drag-box">
@@ -127,7 +134,7 @@ var Wrapper = React.createClass({
         {this.getFormControl() }
         {
           (this.state.modelState === true) ?
-            <ModelContainer displayState={this.state.modelState} changeState={this.changeModelState} schema={this.props.schema}/>
+            <ModelContainer displayState={this.state.modelState} changeState={this.changeModelState} schema={this.props.schema} onSchemaEdit = {this.changeSchema}/>
             : null
         }
         <div className="overlap-dragbox" data-toggle="modal" data-target="#textboxModal"></div>
@@ -142,7 +149,7 @@ var TextBox = React.createClass({
     return (
       <div className="form-group">
         <label htmlFor="usr">{prop.templateOptions.label}: </label>
-        <input type="text" className="form-control"/>
+        <span>{prop.templateOptions.isRequired ? '*' : ''}</span><input type="text" className="form-control" placeholder={prop.templateOptions.placeholder}/>
       </div>
     );
   }
@@ -199,7 +206,7 @@ var CheckBox = React.createClass({
         </div>
 
         : <div className="checkbox">
-          <label><input type="checkbox" value=""/>Option 1</label>
+          <label><input type="checkbox" value=""/>{prop.templateOptions.label}</label>
         </div>
     );
   }
@@ -235,12 +242,12 @@ var ModelContainer = React.createClass({
         model = <TextBoxEdit schema = {this.props.schema} callbackParent={this.getChildState} />
         break;
       case 'checkbox':
-        model = <CheckboxEdit schema = {this.props.schema}/>
+        model = <CheckboxEdit schema = {this.props.schema} callbackParent={this.getChildState}/>
         break;
       case 'multiCheckbox':
       case "radio":
       case 'select':
-        model = <RadioEdit schema = {this.props.schema}/>
+        model = <RadioEdit schema = {this.props.schema} callbackParent={this.getChildState}/>
         break;
     }
     return model;
@@ -253,9 +260,10 @@ var ModelContainer = React.createClass({
   hideModal() {
     this.setState({ show: false });
     this.props.changeState(this.props.displayState);
+    this.props.onSchemaEdit(this.props.schema);
   },
   getChildState(state) {
-    console.log(state.data);
+    this.props.onSchemaEdit(state)
   },
   render() {
     return (
@@ -285,27 +293,36 @@ var TextBoxEdit = React.createClass({
   getInitialState() {
     var prop = this.props.schema;
     return {
-      data:{
-      'id': '',
-      'label': prop.templateOptions.label,
-      'placeholder': prop.templateOptions.placeholder,
-      'isRequired': prop.templateOptions.isRequired
-    }
+      data: {
+        'id': '',
+        'label': prop.templateOptions.label,
+        'placeholder': prop.templateOptions.placeholder,
+        'isRequired': prop.templateOptions.isRequired
+      }
     }
   },
   handleChange(e) {
     console.log(e.target.checked);
-    if(e.target.name==='isRequired')
-    {
+    if (e.target.name === 'isRequired') {
       this.state.data[e.target.name] = e.target.checked
     }
-    else{
+    else {
       this.state.data[e.target.name] = e.target.value
-    }    
+    }
     this.setState({
-      state:this.state
+      state: this.state
     })
-    this.props.callbackParent(this.state);
+    var prop = this.props.schema;
+
+    prop = {
+      id: this.state.data.id,
+      templateOptions: {
+        label: this.state.data.label,
+        isRequired: this.state.data.isRequired,
+        placeholder: this.state.data.placeholder
+      }
+    };
+    this.props.callbackParent(prop);
   },
   render() {
     return (
@@ -341,7 +358,29 @@ var TextBoxEdit = React.createClass({
 
 var CheckboxEdit = React.createClass({
   getInitialState() {
-    return { schema: this.props.schema }
+    var prop = this.props.schema;
+    return {
+      data: {
+        'id': '',
+        'label': prop.templateOptions.label
+      }
+    }
+  },
+  handleChange(e) {
+    this.state.data[e.target.name] = e.target.value
+    console.log(this.state.data[e.target.name]);
+    this.setState({
+      state: this.state
+    })
+    var prop = this.props.schema;
+
+    prop = {
+      id: this.state.data.id,
+      templateOptions: {
+        label: this.state.data.label,
+      }
+    };
+    this.props.callbackParent(prop);
   },
   render() {
     return (
@@ -349,13 +388,13 @@ var CheckboxEdit = React.createClass({
         <div className="form-group">
           <label className="control-label col-sm-3" htmlFor="email">Id: </label>
           <div className="col-sm-9">
-            <input type="email" className="form-control"/>
+            <input type="email" className="form-control" name="id" onChange={this.handleChange}/>
           </div>
         </div>
         <div className="form-group">
           <label className="control-label col-sm-3" htmlFor="pwd">Label Text: </label>
           <div className="col-sm-9">
-            <input type="text" className="form-control" />
+            <input type="text" className="form-control" name="label" value={this.state.data.label} onChange={this.handleChange}/>
           </div>
         </div>
       </form>
@@ -366,7 +405,14 @@ var CheckboxEdit = React.createClass({
 
 var RadioEdit = React.createClass({
   getInitialState() {
-    return { schema: this.props.schema }
+    console.log(this.props.schema);
+    return { 
+      data:{
+        'id':'',
+        'options':this.props.templateOptions.options,
+        'label':this.props.templateOptions.label
+      }
+     }
   },
   render() {
     return (
@@ -380,7 +426,7 @@ var RadioEdit = React.createClass({
         <div className="form-group">
           <label className="control-label col-sm-3" htmlFor="pwd">Label Text: </label>
           <div className="col-sm-9">
-            <input type="text" className="form-control" />
+            <input type="text" className="form-control" value={this.state.label}/>
           </div>
         </div>
         <div className="form-group">
