@@ -8,8 +8,9 @@ var CheckBox = React.createClass({
             multiCheck = true;
         }
         return (
-            (multiCheck == true)
+            (multiCheck === true)
                 ? <div>
+                    <p>{prop.templateOptions.label}</p>
                     {
                         prop.templateOptions.options.map((item, i) => (
                             <div className="checkbox" key={i}>

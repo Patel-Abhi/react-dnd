@@ -108,11 +108,8 @@ var Container = React.createClass({
   },
 
   dropItem(item) {
-    var items = this.state.droppedItems;
-    items.push(item);
-    this.setState({
-      droppedItems: items
-    });
+    console.log(item)
+
   },
 
   render() {
@@ -134,8 +131,8 @@ var Container = React.createClass({
          */}
         <ShoppingCart onDropItem={this.dropItem}/>
         <div className="pull-right">
-        <button className="btn btn-default">Cancel</button>
-        <button className="btn btn-primary">Save</button>
+          <button className="btn btn-default">Cancel</button>
+          <button className="btn btn-primary" >Save</button>
         </div>
         <div>
         </div>

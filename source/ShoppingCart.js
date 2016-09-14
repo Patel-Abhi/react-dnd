@@ -13,6 +13,7 @@ const ShoppingCartSpec = {
     component.setState({
       controls: component.state.controls
     });
+   // component.componentDidUpdate1();
     return {
       name: 'ShoppingCart',
     };
@@ -37,6 +38,23 @@ var ShoppingCart = React.createClass({
     canDrop: PropTypes.bool.isRequired,
     dropItems: PropTypes.object,
   },
+
+
+// **********************************************************************************
+
+  componentWillReceiveProps(){
+      this.props.onDropItem(this.state.controls);
+  },
+  componentDidUpdate(){
+      this.props.onDropItem(this.state.controls);
+  },
+  abc(){
+    this.props.onDropItem(this.state.controls);
+  },
+
+// **********************************************************************************
+
+
   getInitialState() {
     return {
       controls: []
@@ -58,7 +76,7 @@ var ShoppingCart = React.createClass({
     var listStyle = { 'listStyleType': 'none' };
     return connectDropTarget(
       <div className='shopping-cart' style={ style }>
-        <ul style={listStyle}>
+        <ul style={listStyle} onChange={this.abc}>
           {
             this.state.controls.map((item, i) =>
               (
