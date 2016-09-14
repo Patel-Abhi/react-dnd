@@ -30,11 +30,11 @@ var ModelContainer = React.createClass({
     hideModal() {
         this.setState({ show: false });
         this.props.changeState(this.props.displayState);
-        this.props.onSchemaEdit(this.props.schema);
+        //this.props.onSchemaEdit(this.props.schema);
     },
     getChildProp(state) {
-        return state;
-        //this.props.onSchemaEdit(state)
+        //return state;
+        this.props.onSchemaEdit(state)
     },
     render() {
         return (

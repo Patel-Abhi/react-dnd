@@ -3,7 +3,7 @@ var React = require('react');
 var RadioEdit = React.createClass({
     getInitialState() {
         return {
-            id: '',
+            id:this.props.schema.id,
             options: this._stringifyOptions(this.props.schema.templateOptions.options),
             label: this.props.schema.templateOptions.label
         }
@@ -31,9 +31,18 @@ var RadioEdit = React.createClass({
     handleSubmit(e) {
         e.preventDefault();
         var state = this.state;
-        state.options = this._parseOptions(state.options);
-        console.log(state);
-        //this.props.callbackParent(state);
+         var prop = this.props.schema;
+
+        prop = {
+            id: this.state.id,
+            type: this.props.schema.type,
+            templateOptions: {
+                label: this.state.label,
+                options: this._parseOptions(state.options)
+            },            
+        };
+
+        this.props.callbackParent(prop);
     },
     render() {
         return (
@@ -41,7 +50,7 @@ var RadioEdit = React.createClass({
                 <div className="form-group">
                     <label className="control-label col-sm-3" htmlFor="email">Id: </label>
                     <div className="col-sm-9">
-                        <input type="text" name="id" id="id"  className="form-control" onChange={this.handleChange}/>
+                        <input type="text" name="id" id="id"  className="form-control" value={this.state.id} onChange={this.handleChange}/>
                     </div>
                 </div>
                 <div className="form-group">

@@ -1,7 +1,7 @@
 var React = require('react');
 var TextBox = require('../Controls/TextBox');
-var TextArea = require('../Controls/TextBox');
-var Radio = require('../Controls/TextBox');
+var TextArea = require('../Controls/TextArea');
+var Radio = require('../Controls/Radio');
 var CheckBox = require('../Controls/CheckBox');
 var DropDown = require('../Controls/DropDown');
 var ModelContainer = require('../Models/ModelContainer');
@@ -15,7 +15,6 @@ var Wrapper = React.createClass({
     },
     getFormControl() {
         var control;
-
         switch (this.props.schema.type) {
             case 'input':
                 control = <TextBox propVal = {this.state.schema}/>
@@ -50,7 +49,8 @@ var Wrapper = React.createClass({
     changeSchema(newSchema) {
         //console.log(newSchema);
         this.setState({
-            schema: newSchema
+            schema: newSchema,
+            modelState: false
         })
     },
     render() {
@@ -65,7 +65,7 @@ var Wrapper = React.createClass({
                 {this.getFormControl() }
                 {
                     (this.state.modelState === true) ?
-                        <ModelContainer displayState={this.state.modelState} changeState={this.changeModelState} schema={this.props.schema} onSchemaEdit = {this.changeSchema}/>
+                        <ModelContainer displayState={this.state.modelState} changeState={this.changeModelState} schema={this.state.schema} onSchemaEdit = {this.changeSchema}/>
                         : null
                 }
                 <div className="overlap-dragbox" data-toggle="modal" data-target="#textboxModal"></div>

@@ -14,6 +14,17 @@ var textSchema = {
     "isRequired": false
   }
 }
+
+var textAreaSchema = {
+  "type": "textArea",
+  "key": "textArea",
+  "templateOptions": {
+    "type": "text",
+    "placeholder": "Text Area",
+    "label": "Text Area",
+    "isRequired": false
+  }
+}
 var radioSchema = {
   "type": "radio",
   "key": "radio1",
@@ -85,15 +96,6 @@ var chackBoxSchema = {
     "type": "checkbox",
     "placeholder": "",
     "label": "Check Box"
-  }
-}
-var textAreaSchema = {
-  "type": "textArea",
-  "key": "textArea",
-  "templateOptions": {
-    "type": "text",
-    "placeholder": "Text Area",
-    "label": "Text Area"
   }
 }
 

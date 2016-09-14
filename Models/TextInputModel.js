@@ -1,13 +1,18 @@
 var React = require('react');
 
+var TextBox = require('../Controls/TextBox')
+
 var TextBoxEdit = React.createClass({
     getInitialState() {
+        //console.log('from text box model');
+        //console.log(this.props.schema);
         var prop = this.props.schema;
         return {
-                'id': '',
-                'label': prop.templateOptions.label,
-                'placeholder': prop.templateOptions.placeholder,
-                'isRequired': prop.templateOptions.isRequired
+                id: prop.id,
+                type:prop.type,
+                label: prop.templateOptions.label,
+                placeholder: prop.templateOptions.placeholder,
+                isRequired: prop.templateOptions.isRequired
         }
     },
     handleChange(e) {
@@ -27,14 +32,16 @@ var TextBoxEdit = React.createClass({
 
         prop = {
             id: this.state.id,
+            type: this.props.schema.type,
             templateOptions: {
-                label: this.state.data.label,
+                label: this.state.label,
                 isRequired: this.state.isRequired,
                 placeholder: this.state.placeholder
+
             }
         };
-        console.log(prop);
-        //this.props.callbackParent(prop);
+        //console.log(prop);
+        this.props.callbackParent(prop);
     },
     render() {
         return (
@@ -60,7 +67,7 @@ var TextBoxEdit = React.createClass({
                 <div className="form-group">
                     <label className="control-label col-sm-3" htmlFor="pwd" style={{ paddingTop: 0 }}>Required</label>
                     <div className="col-sm-9">
-                        <input type="checkbox" name="isRequired" value={this.state.isRequired} onChange={this.handleChange}/>
+                        <input type="checkbox" name="isRequired" checked={this.state.isRequired} onChange={this.handleChange}/>
                     </div>
                 </div>
                 <button type="submit" className="col-sm-3 btn btn-primary">Save</button>
