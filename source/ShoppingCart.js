@@ -75,4 +75,4 @@ var ShoppingCart = React.createClass({
   }
 });
 
-export default DropTarget(constants.SNACK, ShoppingCartSpec, collect)(ShoppingCart);
+export default DropTarget(constants.FormElement, ShoppingCartSpec, collect)(ShoppingCart);

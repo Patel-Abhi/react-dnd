@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ShoppingCart from './ShoppingCart';
-import Snack from './Snack';
+import FormElement from './FormElement';
 import { DragDropContext } from 'react-dnd';
 import HTML5BackEnd from 'react-dnd-html5-backend';
 
@@ -98,50 +98,47 @@ var chackBoxSchema = {
   }
 }
 
-var postSchema = {
-  name:'',
-  fields:[]
-};
 
 var Container = React.createClass({
-
   getInitialState() {
     return {
-      droppedItems: []
+      name: '',
+      fields: this.dropItem()
     }
   },
 
   dropItem(item) {
-    postSchema.fields=item;
-
+    return item;
   },
-  handleChange(e){
-      postSchema.name=e.target.value;
+  handleChange(e) {
+    postSchema.name = e.target.value;
   },
-  displaySchema(){
-      console.log(postSchema);
+  displaySchema() {
+    console.log(this.state);
   },
   render() {
     return (
-      <div>
-        <Snack name='Text' schema={textSchema} />
-        <Snack name='Popcorn' schema={textAreaSchema} />
-        <Snack name='Radio'  schema={radioSchema} />
-        <Snack name='Drop Down' schema={selectSchema} />
-        <Snack name='CheckBox' schema={chackBoxSchema} />
-        <Snack name='Multi Check' schema={multiCheck} />
-        <div className="container">
-          <div className="form-group">
+      <div className="row">
+        <div className="col-sm-9">
+          <div className="row">
+            <div className="col-sm-12">
               <label htmlFor="usr">Name: </label>
               <input type="text" className="form-control" onChange={this.handleChange}/>
             </div>
-        </div>  
-        <ShoppingCart onDropItem={this.dropItem}/>
-        <div className="pull-right">
-          <button className="btn btn-default">Cancel</button>
-          <button className="btn btn-primary" onClick={this.displaySchema}>Save</button>
+          </div>
+          <ShoppingCart onDropItem={this.dropItem}/>
+          <div className="pull-right">
+            <button className="btn btn-default">Cancel</button>
+            <button className="btn btn-primary" onClick={this.displaySchema}>Save</button>
+          </div>
         </div>
-        <div>
+        <div className="col-sm-3">
+          <FormElement name='Text' schema={textSchema} />
+          <FormElement name='TextArea' schema={textAreaSchema} />
+          <FormElement name='Radio'  schema={radioSchema} />
+          <FormElement name='Drop Down' schema={selectSchema} />
+          <FormElement name='CheckBox' schema={chackBoxSchema} />
+          <FormElement name='Multi Check' schema={multiCheck} />
         </div>
       </div>
     );

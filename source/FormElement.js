@@ -17,7 +17,6 @@ const snackSpec = {
     const dropResult = monitor.getDropResult();
 
     if (dropResult) {
-      //console.log(`You dropped ${dragItem.name} into ${dropResult.name}`);
       <ShoppingCart/>
       name.push(dragItem.name);
     }
@@ -33,7 +32,7 @@ let collect = (connect, monitor) => {
   };
 }
 
-var Snack = React.createClass({
+var FormElement = React.createClass({
   propTypes: {
     connectDragSource: PropTypes.func.isRequired,
     isDragging: PropTypes.bool.isRequired,
@@ -50,14 +49,9 @@ var Snack = React.createClass({
     return connectDragSource(
       <div>
         <span style={spanStyle}>{this.props.schema.type}</span>
-        {/* <input type={this.props.schema.templateOptions.type} placeholder={this.props.schema.templateOptions.placeholder}/> */}
       </div>
-
-      // <div className='snack' style={ style }>
-      //   { name }
-      // </div>
     );
   }
 });
 
-export default DragSource(constants.SNACK, snackSpec, collect)(Snack);
+export default DragSource(constants.FormElement, snackSpec, collect)(FormElement);
