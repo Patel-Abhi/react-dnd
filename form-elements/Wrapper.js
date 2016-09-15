@@ -1,9 +1,9 @@
 var React = require('react');
-var TextBox = require('../Controls/TextBox');
-var TextArea = require('../Controls/TextArea');
-var Radio = require('../Controls/Radio');
-var CheckBox = require('../Controls/CheckBox');
-var DropDown = require('../Controls/DropDown');
+var TextBox = require('../form-elements/TextBox');
+var TextArea = require('../form-elements/TextArea');
+var Radio = require('../form-elements/Radio');
+var CheckBox = require('../form-elements/CheckBox');
+var DropDown = require('../form-elements/DropDown');
 var ModelContainer = require('../Models/ModelContainer');
 
 var Wrapper = React.createClass({
@@ -17,20 +17,20 @@ var Wrapper = React.createClass({
         var control;
         switch (this.props.schema.type) {
             case 'input':
-                control = <TextBox propVal = {this.state.schema}/>
+                control = <TextBox schema = {this.state.schema}/>
                 break;
             case "textArea":
-                control = <TextArea propVal = {this.state.schema}/>
+                control = <TextArea schema = {this.state.schema}/>
                 break;
             case 'multiCheckbox':
             case 'checkbox':
-                control = <CheckBox propVal = {this.state.schema}/>
+                control = <CheckBox schema = {this.state.schema}/>
                 break;
             case "radio":
-                control = <Radio propVal={this.state.schema}/>
+                control = <Radio schema={this.state.schema}/>
                 break;
             case 'select':
-                control = <DropDown propVal = {this.state.schema}/>
+                control = <DropDown schema = {this.state.schema}/>
                 break;
         }
         return control;
@@ -47,7 +47,6 @@ var Wrapper = React.createClass({
         this.setState({ modelState: false })
     },
     changeSchema(newSchema) {
-        //console.log(newSchema);
         this.setState({
             schema: newSchema,
             modelState: false

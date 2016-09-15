@@ -14,7 +14,6 @@ var textSchema = {
     "isRequired": false
   }
 }
-
 var textAreaSchema = {
   "type": "textArea",
   "key": "textArea",
@@ -99,6 +98,11 @@ var chackBoxSchema = {
   }
 }
 
+var postSchema = {
+  name:'',
+  fields:[]
+};
+
 var Container = React.createClass({
 
   getInitialState() {
@@ -108,10 +112,15 @@ var Container = React.createClass({
   },
 
   dropItem(item) {
-    console.log(item)
+    postSchema.fields=item;
 
   },
-
+  handleChange(e){
+      postSchema.name=e.target.value;
+  },
+  displaySchema(){
+      console.log(postSchema);
+  },
   render() {
     return (
       <div>
@@ -121,18 +130,16 @@ var Container = React.createClass({
         <Snack name='Drop Down' schema={selectSchema} />
         <Snack name='CheckBox' schema={chackBoxSchema} />
         <Snack name='Multi Check' schema={multiCheck} />
-        {/*
         <div className="container">
           <div className="form-group">
               <label htmlFor="usr">Name: </label>
-              <input type="text" className="form-control"/>
+              <input type="text" className="form-control" onChange={this.handleChange}/>
             </div>
         </div>  
-         */}
         <ShoppingCart onDropItem={this.dropItem}/>
         <div className="pull-right">
           <button className="btn btn-default">Cancel</button>
-          <button className="btn btn-primary" >Save</button>
+          <button className="btn btn-primary" onClick={this.displaySchema}>Save</button>
         </div>
         <div>
         </div>

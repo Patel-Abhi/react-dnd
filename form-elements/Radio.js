@@ -1,12 +1,12 @@
 var React = require('react');
 var Radio = React.createClass({
   render() {
-    var prop = this.props.propVal;
+    var schema = this.props.schema;
     return (
       <form>
-        <p>{prop.templateOptions.label}</p>
+        <p>{schema.templateOptions.label}</p>
         {
-          prop.templateOptions.options.map((item, i) => (
+          schema.templateOptions.options.map((item, i) => (
             <div className="radio" key={i}>
               <label><input type="radio" value={item.value}/>{item.name}</label>
             </div>

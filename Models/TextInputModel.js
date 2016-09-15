@@ -1,6 +1,6 @@
 var React = require('react');
 
-var TextBox = require('../Controls/TextBox')
+var TextBox = require('../form-elements/TextBox')
 
 var TextBoxEdit = React.createClass({
     getInitialState() {

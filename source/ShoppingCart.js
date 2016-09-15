@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 import constants from './constants';
-var Wrapper = require('../Controls/Wrapper');
+var Wrapper = require('../form-elements/Wrapper');
 var ModelContainer = require('../Models/ModelContainer');
 
 
@@ -13,7 +13,6 @@ const ShoppingCartSpec = {
     component.setState({
       controls: component.state.controls
     });
-   // component.componentDidUpdate1();
     return {
       name: 'ShoppingCart',
     };
@@ -39,22 +38,6 @@ var ShoppingCart = React.createClass({
     dropItems: PropTypes.object,
   },
 
-
-// **********************************************************************************
-
-  componentWillReceiveProps(){
-      this.props.onDropItem(this.state.controls);
-  },
-  componentDidUpdate(){
-      this.props.onDropItem(this.state.controls);
-  },
-  abc(){
-    this.props.onDropItem(this.state.controls);
-  },
-
-// **********************************************************************************
-
-
   getInitialState() {
     return {
       controls: []
@@ -62,7 +45,7 @@ var ShoppingCart = React.createClass({
   },
   deleteControl(toRemove) {
     this.setState({
-      controls: this.state.controls.filter(x => x.id !== toRemove.id)
+      controls: this.state.controls.filter(x => x.id !== toRemove.id),
     });
   },
   render() {
@@ -76,7 +59,7 @@ var ShoppingCart = React.createClass({
     var listStyle = { 'listStyleType': 'none' };
     return connectDropTarget(
       <div className='shopping-cart' style={ style }>
-        <ul style={listStyle} onChange={this.abc}>
+        <ul style={listStyle}>
           {
             this.state.controls.map((item, i) =>
               (
