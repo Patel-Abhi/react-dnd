@@ -13,6 +13,8 @@ const ShoppingCartSpec = {
     component.setState({
       controls: component.state.controls
     });
+    //console.log(component.state.controls);
+    component.props.onDropItem(component.state.controls);
     return {
       name: 'ShoppingCart',
     };
@@ -44,9 +46,12 @@ var ShoppingCart = React.createClass({
     }
   },
   deleteControl(toRemove) {
+    var ctrls = this.state.controls.filter(x => x.id !== toRemove.id)
     this.setState({
-      controls: this.state.controls.filter(x => x.id !== toRemove.id),
+      controls: ctrls
     });
+    //console.log(ctrls)
+    this.props.onDropItem(ctrls);
   },
   render() {
     const { canDrop, isOver, connectDropTarget, dropItems} = this.props;

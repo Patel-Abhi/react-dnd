@@ -103,15 +103,27 @@ var Container = React.createClass({
   getInitialState() {
     return {
       name: '',
-      fields: this.dropItem()
+      fields: []
     }
   },
 
   dropItem(item) {
-    return item;
+    var controls = item;
+    this.setState({
+      fields: controls
+    });
+    return controls;
   },
+
+  // chnageState(){
+  //   this.setState({
+  //     fields: this.dropItem()
+  //   })
+  // },
   handleChange(e) {
-    postSchema.name = e.target.value;
+    this.setState({
+      name: e.target.value
+    })
   },
   displaySchema() {
     console.log(this.state);
