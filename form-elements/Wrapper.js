@@ -35,9 +35,6 @@ var Wrapper = React.createClass({
         }
         return control;
     },
-    onDelete() {
-        this.props.onDelete(this.props.schema);
-    },
     handleEdit() {
         this.setState({
             modelState: true
@@ -46,11 +43,12 @@ var Wrapper = React.createClass({
     changeModelState() {
         this.setState({ modelState: false })
     },
-    changeSchema(newSchema) {
+    updateSchema(newSchema) {
         this.setState({
             schema: newSchema,
             modelState: false
-        })
+        });
+        this.props.updateSchema(this.state.schema.id,newSchema);
     },
     render() {
         return (
@@ -64,7 +62,7 @@ var Wrapper = React.createClass({
                 {this.getFormControl() }
                 {
                     (this.state.modelState === true) ?
-                        <ModelContainer displayState={this.state.modelState} changeState={this.changeModelState} schema={this.state.schema} onSchemaEdit = {this.changeSchema}/>
+                        <ModelContainer displayState={this.state.modelState} changeState={this.changeModelState} schema={this.state.schema} onSchemaUpdate = {this.updateSchema}/>
                         : null
                 }
                 <div className="overlap-dragbox" data-toggle="modal" data-target="#textboxModal"></div>

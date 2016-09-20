@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 import constants from './constants';
 var Wrapper = require('../form-elements/Wrapper');
-var ModelContainer = require('../Models/ModelContainer');
 
 
 // Spec object definiction for Shoping cart
@@ -13,7 +12,6 @@ const ShoppingCartSpec = {
     component.setState({
       controls: component.state.controls
     });
-    //console.log(component.state.controls);
     component.props.onDropItem(component.state.controls);
     return {
       name: 'ShoppingCart',
@@ -45,13 +43,29 @@ var ShoppingCart = React.createClass({
       controls: []
     }
   },
+
+  //Remove a control
   deleteControl(toRemove) {
     var ctrls = this.state.controls.filter(x => x.id !== toRemove.id)
     this.setState({
       controls: ctrls
     });
-    //console.log(ctrls)
     this.props.onDropItem(ctrls);
+  },
+
+  // update a control
+  updateSchema(index, item) {
+    var obj = this.state.controls.map((data, i) => {
+      if (data.id == index) {
+        data = {};
+        Object.assign(data, item);
+      }
+      return data;
+    });
+    this.props.onDropItem(obj);
+    this.setState({
+      controls: obj
+    })
   },
   render() {
     const { canDrop, isOver, connectDropTarget, dropItems} = this.props;
@@ -69,7 +83,7 @@ var ShoppingCart = React.createClass({
             this.state.controls.map((item, i) =>
               (
                 <li draggable="true" key={i}>
-                  <Wrapper key={i} schema={item} onDelete={this.deleteControl} />
+                  <Wrapper key={i} schema={item} onDelete={this.deleteControl} updateSchema = {this.updateSchema}/>
                 </li>
               )
             )

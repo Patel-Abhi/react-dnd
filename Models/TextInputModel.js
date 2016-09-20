@@ -4,8 +4,6 @@ var TextBox = require('../form-elements/TextBox')
 
 var TextBoxEdit = React.createClass({
     getInitialState() {
-        //console.log('from text box model');
-        //console.log(this.props.schema);
         var prop = this.props.schema;
         return {
                 id: prop.id,
@@ -40,7 +38,6 @@ var TextBoxEdit = React.createClass({
 
             }
         };
-        //console.log(prop);
         this.props.callbackParent(prop);
     },
     render() {

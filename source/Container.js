@@ -112,14 +112,7 @@ var Container = React.createClass({
     this.setState({
       fields: controls
     });
-    return controls;
   },
-
-  // chnageState(){
-  //   this.setState({
-  //     fields: this.dropItem()
-  //   })
-  // },
   handleChange(e) {
     this.setState({
       name: e.target.value
