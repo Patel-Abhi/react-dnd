@@ -35,6 +35,9 @@ var Wrapper = React.createClass({
         }
         return control;
     },
+        onDelete() {
+        this.props.onDelete(this.props.schema);
+    },
     handleEdit() {
         this.setState({
             modelState: true
