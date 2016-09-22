@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { DragSource } from 'react-dnd';
 import constants from './constants';
-import ShoppingCart from './ShoppingCart';
+import DropContainer from './DropContainer';
 
 var name = [];
 
@@ -17,7 +17,7 @@ const snackSpec = {
     const dropResult = monitor.getDropResult();
 
     if (dropResult) {
-      <ShoppingCart/>
+      <DropContainer/>
       name.push(dragItem.name);
     }
   },

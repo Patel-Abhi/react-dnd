@@ -1,8 +1,8 @@
 var React = require('react');
 import {Modal, Button} from 'react-bootstrap';
-var TextBoxEdit = require('./TextInputModel');
-var CheckboxEdit = require('./CheckBoxModel');
-var RadioEdit = require('./RadioEditModel');
+var TextBoxEdit = require('./TextInputModal');
+var CheckboxEdit = require('./CheckBoxModal');
+var RadioEdit = require('./RadioEditModal');
 
 var ModelContainer = React.createClass({
     getControlModel() {
@@ -30,7 +30,6 @@ var ModelContainer = React.createClass({
     hideModal() {
         this.setState({ show: false });
         this.props.changeState(this.props.displayState);
-        //this.props.onSchemaUpdate(this.props.schema);
     },
     getChildProp(state) {
         this.props.onSchemaUpdate(state)

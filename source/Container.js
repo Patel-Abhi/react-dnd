@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ShoppingCart from './ShoppingCart';
+import DropContainer from './DropContainer';
 import FormElement from './FormElement';
 import { DragDropContext } from 'react-dnd';
 import HTML5BackEnd from 'react-dnd-html5-backend';
@@ -131,7 +131,7 @@ var Container = React.createClass({
               <input type="text" className="form-control" onChange={this.handleChange}/>
             </div>
           </div>
-          <ShoppingCart onDropItem={this.dropItem}/>
+          <DropContainer onDropItem={this.dropItem}/>
           <div className="pull-right">
             <button className="btn btn-default">Cancel</button>
             <button className="btn btn-primary" onClick={this.displaySchema}>Save</button>

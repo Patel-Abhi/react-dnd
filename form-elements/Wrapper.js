@@ -4,7 +4,7 @@ var TextArea = require('../form-elements/TextArea');
 var Radio = require('../form-elements/Radio');
 var CheckBox = require('../form-elements/CheckBox');
 var DropDown = require('../form-elements/DropDown');
-var ModelContainer = require('../Models/ModelContainer');
+var ModelContainer = require('../Modals/ModalContainer');
 
 var Wrapper = React.createClass({
     getInitialState() {

@@ -4,8 +4,8 @@ import constants from './constants';
 var Wrapper = require('../form-elements/Wrapper');
 
 
-// Spec object definiction for Shoping cart
-const ShoppingCartSpec = {
+// Spec object definiction for DropContainer 
+const DropContainerSpec = {
   drop(connect, monitor, component) {
     var draggedControl = Object.assign({ id: new Date().getTime() }, monitor.getItem().schema);
     component.state.controls.push(draggedControl);
@@ -19,7 +19,7 @@ const ShoppingCartSpec = {
   }
 };
 
-//  Shopping cart collection function
+//  Drop Container collection function
 let collect = (connect, monitor) => {
   return {
     connectDropTarget: connect.dropTarget(),
@@ -29,8 +29,8 @@ let collect = (connect, monitor) => {
   };
 }
 
-// Shopping cart component
-var ShoppingCart = React.createClass({
+// Drop Container component
+var DropContainer = React.createClass({
   propTypes: {
     connectDropTarget: PropTypes.func.isRequired,
     isOver: PropTypes.bool.isRequired,
@@ -94,4 +94,4 @@ var ShoppingCart = React.createClass({
   }
 });
 
-export default DropTarget(constants.FormElement, ShoppingCartSpec, collect)(ShoppingCart);
+export default DropTarget(constants.FormElement, DropContainerSpec, collect)(DropContainer);
