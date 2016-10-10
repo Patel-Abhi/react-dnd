@@ -5,7 +5,7 @@ import DropContainer from './DropContainer';
 
 var name = [];
 
-const snackSpec = {
+const formElementsSpec = {
   beginDrag(props) {
     return {
       name: props.name,
@@ -48,10 +48,10 @@ var FormElement = React.createClass({
 
     return connectDragSource(
       <div>
-        <span style={spanStyle}>{this.props.schema.type}</span>
+        <span style={spanStyle}><i style={{'textAlign':'left'}} className="fa fa-align-right" aria-hidden="true"></i> {this.props.schema.type}</span>
       </div>
     );
   }
 });
 
-export default DragSource(constants.FormElement, snackSpec, collect)(FormElement);
+export default DragSource(constants.FormElement, formElementsSpec, collect)(FormElement);

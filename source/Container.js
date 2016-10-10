@@ -108,6 +108,7 @@ var Container = React.createClass({
   },
 
   dropItem(item) {
+    console.log(item);
     var controls = item;
     this.setState({
       fields: controls

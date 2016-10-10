@@ -22,7 +22,6 @@ var TextBox = React.createClass({
     return newProp;
   },
   render() {
-    console.log(this.state);
     var wrapperClass = 'form-group';
     if (this.props.error && this.props.error.length > 0) {
       wrapperClass += ' ' + 'has-error';

@@ -51,7 +51,7 @@ var Wrapper = React.createClass({
             schema: newSchema,
             modelState: false
         });
-        this.props.updateSchema(this.state.schema.id,newSchema);
+        this.props.updateSchema(this.state.schema.key,newSchema);
     },
     render() {
         return (

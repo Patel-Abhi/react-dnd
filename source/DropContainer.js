@@ -7,7 +7,10 @@ var Wrapper = require('../form-elements/Wrapper');
 // Spec object definiction for DropContainer 
 const DropContainerSpec = {
   drop(connect, monitor, component) {
-    var draggedControl = Object.assign({ id: new Date().getTime() }, monitor.getItem().schema);
+    var newKey = (monitor.getItem().schema.key) + new Date().getMilliseconds();
+    var draggedControl =monitor.getItem().schema;
+    draggedControl.key = newKey;
+    console.log(draggedControl);
     component.state.controls.push(draggedControl);
     component.setState({
       controls: component.state.controls
@@ -46,7 +49,7 @@ var DropContainer = React.createClass({
 
   //Remove a control
   deleteControl(toRemove) {
-    var ctrls = this.state.controls.filter(x => x.id !== toRemove.id)
+    var ctrls = this.state.controls.filter(x => x.key !== toRemove.key)
     this.setState({
       controls: ctrls
     });
@@ -56,7 +59,7 @@ var DropContainer = React.createClass({
   // update a control
   updateSchema(index, item) {
     var obj = this.state.controls.map((data, i) => {
-      if (data.id == index) {
+      if (data.key == index) {
         data = {};
         Object.assign(data, item);
       }
@@ -80,13 +83,15 @@ var DropContainer = React.createClass({
       <div className='shopping-cart' style={ style }>
         <ul style={listStyle}>
           {
-            this.state.controls.map((item, i) =>
-              (
-                <li draggable="true" key={i}>
-                  <Wrapper key={i} schema={item} onDelete={this.deleteControl} updateSchema = {this.updateSchema}/>
-                </li>
+            this.state.controls.length > 0 ?
+              this.state.controls.map((item, i) =>
+                (
+                  <li draggable="true" key={i}>
+                    <Wrapper key={i} schema={item} onDelete={this.deleteControl} updateSchema = {this.updateSchema}/>
+                  </li>
+                )
               )
-            )
+              : <li draggable="true">Drop Components Here</li>
           }
         </ul>
       </div>

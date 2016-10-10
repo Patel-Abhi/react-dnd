@@ -5,7 +5,7 @@ var CheckboxEdit = require('./CheckBoxModal');
 var RadioEdit = require('./RadioEditModal');
 
 var ModelContainer = React.createClass({
-    getControlModel() {
+    getControlModal() {
         var model;
         switch (this.props.schema.type) {
             case 'input':
@@ -45,7 +45,7 @@ var ModelContainer = React.createClass({
                     <Modal.Title id="contained-modal-title-lg">Edit {this.props.schema.type}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {this.getControlModel() }
+                    {this.getControlModal() }
                 </Modal.Body>
                 <Modal.Footer>
                 </Modal.Footer>
