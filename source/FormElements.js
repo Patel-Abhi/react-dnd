@@ -9,7 +9,7 @@ const formElementsSpec = {
   beginDrag(props) {
     return {
       name: props.name,
-      schema: props.schema
+      schema: props.schema,
     };
   },
   endDrag(props, monitor,component) {

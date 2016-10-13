@@ -27,7 +27,6 @@ var TextBoxEdit = React.createClass({
     handleSubmit(e) {
         e.preventDefault();
         var prop = this.props.schema;
-
         prop = {
             id: this.state.id,
             type: this.props.schema.type,

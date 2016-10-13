@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DropContainer from './DropContainer';
-import FormElement from './FormElement';
+import FormElement from './FormElements';
 import { DragDropContext } from 'react-dnd';
 import HTML5BackEnd from 'react-dnd-html5-backend';
 

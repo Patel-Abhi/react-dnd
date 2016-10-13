@@ -1,14 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 import constants from './constants';
-var Wrapper = require('../form-elements/Wrapper');
+var Wrapper = require('../form-elements/ControlWrapper');
 
 
 // Spec object definiction for DropContainer 
 const DropContainerSpec = {
   drop(connect, monitor, component) {
     var newKey = (monitor.getItem().schema.key) + new Date().getMilliseconds();
-    var draggedControl =monitor.getItem().schema;
+    var draggedControl = monitor.getItem().schema;
+    //console.log(monitor.getItem().index);
     draggedControl.key = newKey;
     console.log(draggedControl);
     component.state.controls.push(draggedControl);
@@ -80,14 +81,14 @@ var DropContainer = React.createClass({
     };
     var listStyle = { 'listStyleType': 'none' };
     return connectDropTarget(
-      <div className='shopping-cart' style={ style }>
+      <div className='shopping-cart' style={style}>
         <ul style={listStyle}>
           {
             this.state.controls.length > 0 ?
               this.state.controls.map((item, i) =>
                 (
-                  <li draggable="true" key={i}>
-                    <Wrapper key={i} schema={item} onDelete={this.deleteControl} updateSchema = {this.updateSchema}/>
+                  <li draggable="true" key={i} >
+                    <Wrapper key={i} schema={item} onDelete={this.deleteControl} updateSchema={this.updateSchema} />
                   </li>
                 )
               )

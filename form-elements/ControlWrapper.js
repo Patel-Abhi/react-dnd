@@ -4,7 +4,7 @@ var TextArea = require('../form-elements/TextArea');
 var Radio = require('../form-elements/Radio');
 var CheckBox = require('../form-elements/CheckBox');
 var DropDown = require('../form-elements/DropDown');
-var ModelContainer = require('../Modals/ModalContainer');
+var ModelContainer = require('../Modals/ModalWrapper');
 
 var Wrapper = React.createClass({
     getInitialState() {
@@ -13,11 +13,14 @@ var Wrapper = React.createClass({
             schema: this.props.schema
         }
     },
+    handleChange(){
+
+    },
     getFormControl() {
         var control;
         switch (this.props.schema.type) {
             case 'input':
-                control = <TextBox schema = {this.state.schema}/>
+                control = <TextBox schema = {this.state.schema} label = {this.props.schema.templateOptions.label} text="TextBox" onChange={this.handleChange} name={this.props.schema.templateOptions.label}/>
                 break;
             case "textArea":
                 control = <TextArea schema = {this.state.schema}/>

@@ -1,8 +1,8 @@
 var React = require('react');
 import {Modal, Button} from 'react-bootstrap';
-var TextBoxEdit = require('./TextInputModal');
+var TextBoxEdit = require('./InputModal');
 var CheckboxEdit = require('./CheckBoxModal');
-var RadioEdit = require('./RadioEditModal');
+var RadioEdit = require('./RadioModal');
 
 var ModelContainer = React.createClass({
     getControlModal() {
