@@ -71,7 +71,7 @@ var Wrapper = React.createClass({
                         <ModelContainer displayState={this.state.modelState} changeState={this.changeModelState} schema={this.state.schema} onSchemaUpdate = {this.updateSchema}/>
                         : null
                 }
-                <div className="overlap-dragbox" data-toggle="modal" data-target="#textboxModal"></div>
+
             </div>
         );
     }

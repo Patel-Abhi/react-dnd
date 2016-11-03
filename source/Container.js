@@ -124,7 +124,7 @@ var Container = React.createClass({
   },
   render() {
     return (
-      <div className="row">
+      <div className="row" id="asset-managemant-container">
         <div className="col-sm-9">
           <div className="row">
             <div className="col-sm-12">

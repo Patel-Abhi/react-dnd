@@ -7,11 +7,10 @@ var Wrapper = require('../form-elements/ControlWrapper');
 // Spec object definiction for DropContainer 
 const DropContainerSpec = {
   drop(connect, monitor, component) {
-    var newKey = (monitor.getItem().schema.key) + new Date().getMilliseconds();
-    var draggedControl = monitor.getItem().schema;
-    //console.log(monitor.getItem().index);
+    //var newKey = (monitor.getItem().schema.key) + new Date().getMilliseconds();
+    var newKey = monitor.getItem().schema.key + new Date().getMilliseconds();
+    var draggedControl = Object.assign({ key: newKey }, monitor.getItem().schema);
     draggedControl.key = newKey;
-    console.log(draggedControl);
     component.state.controls.push(draggedControl);
     component.setState({
       controls: component.state.controls
@@ -33,6 +32,8 @@ let collect = (connect, monitor) => {
   };
 }
 
+var placeholder = document.createElement("li");
+placeholder.className = "placeholder";
 // Drop Container component
 var DropContainer = React.createClass({
   propTypes: {
@@ -50,11 +51,12 @@ var DropContainer = React.createClass({
 
   //Remove a control
   deleteControl(toRemove) {
+    console.log(toRemove);
     var ctrls = this.state.controls.filter(x => x.key !== toRemove.key)
     this.setState({
       controls: ctrls
     });
-    this.props.onDropItem(ctrls);
+    this.props.onDropItem(this.state.controls);
   },
 
   // update a control
@@ -71,6 +73,44 @@ var DropContainer = React.createClass({
       controls: obj
     })
   },
+  dragStart(e){    
+    this.dragged = e.currentTarget;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData("text/html",e.currentTarget);
+  },
+  dragEnd(e){
+    console.log('drag end');
+    console.log(this.dragged)
+   this.dragged.style.display = "block";
+    this.dragged.parentNode.removeChild(placeholder);
+    // Update data
+    var data = this.state.controls;
+    var from = Number(this.dragged.dataset.id);
+    var to = Number(this.over.dataset.id);
+    if(from < to) to--;
+    if(this.nodePlacement == "after") to++;
+    data.splice(to, 0, data.splice(from, 1)[0]);
+    this.setState({controls: data});
+  },
+  dragOver: function(e) {
+    e.preventDefault();
+    this.dragged.style.display = "none";
+    if(e.target.className == "placeholder") return;
+    this.over = e.target;
+    // Inside the dragOver method
+    var relY = e.clientY - this.over.offsetTop;
+    var height = this.over.offsetHeight / 2;
+    var parent = e.target.parentNode;
+    
+    if(relY > height) {
+      this.nodePlacement = "after";
+      parent.insertBefore(placeholder, e.target.nextElementSibling);
+    }
+    else if(relY < height) {
+      this.nodePlacement = "before"
+      parent.insertBefore(placeholder, e.target);
+    }
+  },
   render() {
     const { canDrop, isOver, connectDropTarget, dropItems} = this.props;
     const isActive = canDrop && isOver;
@@ -82,12 +122,12 @@ var DropContainer = React.createClass({
     var listStyle = { 'listStyleType': 'none' };
     return connectDropTarget(
       <div className='shopping-cart' style={style}>
-        <ul style={listStyle}>
+        <ul style={listStyle} onDragOver={this.dragOver}>
           {
             this.state.controls.length > 0 ?
               this.state.controls.map((item, i) =>
                 (
-                  <li draggable="true" key={i} >
+                  <li data-id={i} draggable="true" key={i} onDragStart={this.dragStart} onDragEnd = {this.dragEnd}>
                     <Wrapper key={i} schema={item} onDelete={this.deleteControl} updateSchema={this.updateSchema} />
                   </li>
                 )
